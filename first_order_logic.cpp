@@ -184,11 +184,16 @@ bool Quantifier::equalTo(const Formula & f) const
 
 // ---------------------------------------------------------------------
 
-// Funkcije za odredjivanje skupa varijabli ----------------------------
+// Funkcije za odredjivanje skupa varijabli i konstanti ----------------
 
 void VariableTerm::getVars(VariableSet & vars) const
 {
     vars.insert(_v);
+}
+
+void VariableTerm::getConstants(ConstantSet &) const
+{
+    return;
 }
 
 void FunctionTerm::getVars(VariableSet & vars) const
@@ -198,7 +203,23 @@ void FunctionTerm::getVars(VariableSet & vars) const
     }
 }
 
+void FunctionTerm::getConstants(ConstantSet & cts) const
+{
+    if (_ops.size() == 0) {
+        cts.insert(_f);
+    } else {
+        for(unsigned i = 0; i < _ops.size(); i++) {
+            _ops[i]->getConstants(cts);
+        }
+    }
+}
+
 void LogicConstant::getVars(VariableSet &, bool) const
+{
+    return;
+}
+
+void LogicConstant::getConstants(ConstantSet &) const
 {
     return;
 }
@@ -210,15 +231,33 @@ void Atom::getVars(VariableSet & vars, bool) const
     }
 }
 
+void Atom::getConstants(ConstantSet & cts) const
+{
+    for(unsigned i = 0; i < _ops.size(); i++) {
+        _ops[i]->getConstants(cts);
+    }
+}
+
 void UnaryConnective::getVars(VariableSet & vars, bool free) const
 {
     _op->getVars(vars, free);
+}
+
+void UnaryConnective::getConstants(ConstantSet & cts) const
+{
+    _op->getConstants(cts);
 }
 
 void BinaryConnective::getVars(VariableSet & vars, bool free) const
 {
     _op1->getVars(vars, free);
     _op2->getVars(vars, free);
+}
+
+void BinaryConnective::getConstants(ConstantSet & cts) const
+{
+    _op1->getConstants(cts);
+    _op2->getConstants(cts);
 }
 
 void Quantifier::getVars(VariableSet & vars, bool free) const
@@ -244,6 +283,11 @@ void Quantifier::getVars(VariableSet & vars, bool free) const
             vars.erase(_v);
         }
     }
+}
+
+void Quantifier::getConstants(ConstantSet & cts) const
+{
+    _op->getConstants(cts);
 }
 
 // ---------------------------------------------------------------------

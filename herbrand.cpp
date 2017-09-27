@@ -9,3 +9,4 @@ std::ostream & operator << (std::ostream & ostr, const HerbrandUniverse & hu)
     ostr << "Greeting: " << hu.m_greet;
     return ostr;
 }
+
