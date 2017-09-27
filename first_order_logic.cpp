@@ -196,6 +196,11 @@ void VariableTerm::getConstants(ConstantSet &) const
     return;
 }
 
+void VariableTerm::getFunctions(FunctionSet &) const
+{
+    return;
+}
+
 void FunctionTerm::getVars(VariableSet & vars) const
 {
     for(unsigned i = 0; i < _ops.size(); i++) {
@@ -214,12 +219,27 @@ void FunctionTerm::getConstants(ConstantSet & cts) const
     }
 }
 
+void FunctionTerm::getFunctions(FunctionSet & fs) const
+{
+    if (_ops.size() != 0) {
+        fs.insert(_f);
+    }
+    for(unsigned i = 0; i < _ops.size(); i++) {
+        _ops[i]->getFunctions(fs);
+    }
+}
+
 void LogicConstant::getVars(VariableSet &, bool) const
 {
     return;
 }
 
 void LogicConstant::getConstants(ConstantSet &) const
+{
+    return;
+}
+
+void LogicConstant::getFunctions(FunctionSet &) const
 {
     return;
 }
@@ -238,6 +258,13 @@ void Atom::getConstants(ConstantSet & cts) const
     }
 }
 
+void Atom::getFunctions(FunctionSet & fs) const
+{
+    for(unsigned i = 0; i < _ops.size(); i++) {
+        _ops[i]->getFunctions(fs);
+    }
+}
+
 void UnaryConnective::getVars(VariableSet & vars, bool free) const
 {
     _op->getVars(vars, free);
@@ -246,6 +273,11 @@ void UnaryConnective::getVars(VariableSet & vars, bool free) const
 void UnaryConnective::getConstants(ConstantSet & cts) const
 {
     _op->getConstants(cts);
+}
+
+void UnaryConnective::getFunctions(FunctionSet & fs) const
+{
+    _op->getFunctions(fs);
 }
 
 void BinaryConnective::getVars(VariableSet & vars, bool free) const
@@ -258,6 +290,12 @@ void BinaryConnective::getConstants(ConstantSet & cts) const
 {
     _op1->getConstants(cts);
     _op2->getConstants(cts);
+}
+
+void BinaryConnective::getFunctions(FunctionSet & fs) const
+{
+    _op1->getFunctions(fs);
+    _op2->getFunctions(fs);
 }
 
 void Quantifier::getVars(VariableSet & vars, bool free) const
@@ -288,6 +326,11 @@ void Quantifier::getVars(VariableSet & vars, bool free) const
 void Quantifier::getConstants(ConstantSet & cts) const
 {
     _op->getConstants(cts);
+}
+
+void Quantifier::getFunctions(FunctionSet & fs) const
+{
+    _op->getFunctions(fs);
 }
 
 // ---------------------------------------------------------------------

@@ -7,11 +7,13 @@
 #include "first_order_logic.h"
 
 class HerbrandUniverse {
-    std::string m_greet;
+    const Signature & m_signature;
+    const Formula & m_formula;
+    FunctionSet m_functions;
+    std::set<Term> m_level;
 public:
-    HerbrandUniverse(std::string greet);
-
-    friend std::ostream & operator << (std::ostream & ostr, const HerbrandUniverse & hu);
+    HerbrandUniverse(const Signature & sig, const Formula & f);
+    friend ostream & operator << (ostream & out, const HerbrandUniverse & hu);
 };
 
 #endif

@@ -44,6 +44,7 @@ typedef string Variable;
 /* Skup varijabli */
 typedef set<Variable> VariableSet;
 typedef set<FunctionSymbol> ConstantSet;
+typedef set<FunctionSymbol> FunctionSet;
 
 
 class Structure; // L-strukture (videti dole)
@@ -72,8 +73,11 @@ public:
     /* Vraca skup svih varijabli koje se pojavljuju u termu */
     virtual void getVars(VariableSet & vars) const = 0;
 
-    /* Vraca skup svih varijabli koje se pojavljuju u termu */
+    /* Vraca skup svih konstanti (funkcija arnosti 0) koje se pojavljuju u termu */
     virtual void getConstants(ConstantSet & cts) const = 0;
+
+    /* Vraca skup svih konstanti (funkcija arnosti 0) koje se pojavljuju u termu */
+    virtual void getFunctions(FunctionSet & fs) const = 0;
 
     /* Odredjuje da li se data varijabla nalazi u termu */
     bool containsVariable(const Variable & v) const;
@@ -101,6 +105,7 @@ public:
     virtual bool equalTo(const Term & t) const;
     virtual void getVars(VariableSet & vars) const;
     virtual void getConstants(ConstantSet & cts) const;
+    virtual void getFunctions(FunctionSet & fs) const;
     virtual unsigned eval(const Structure & st, const Valuation & val) const;
     virtual Term substitute(const Variable & v, const Term & t);
 };
@@ -124,6 +129,7 @@ public:
     virtual bool equalTo(const Term & t) const;
     virtual void getVars(VariableSet & vars) const;
     virtual void getConstants(ConstantSet & cts) const;
+    virtual void getFunctions(FunctionSet & fs) const;
     virtual unsigned eval(const Structure & st, const Valuation & val) const;
     virtual Term substitute(const Variable & v, const Term & t);
 };
@@ -159,6 +165,7 @@ public:
     slobodne varijable u formuli */
     virtual void getVars(VariableSet & vars, bool free = false) const = 0;
     virtual void getConstants(ConstantSet & cts) const = 0;
+    virtual void getFunctions(FunctionSet & fs) const = 0;
 
     /* Ispituje da li se varijabla pojavljuje u formuli (kao slobodna ili
     vezana) */
@@ -190,6 +197,7 @@ public:
     virtual bool equalTo(const Formula & f) const;
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & cts) const;
+    virtual void getFunctions(FunctionSet & fs) const;
     virtual Formula substitute(const Variable & v, const Term & t);
 };
 
@@ -232,6 +240,7 @@ public:
 
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & vars) const;
+    virtual void getFunctions(FunctionSet & vars) const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
 };
@@ -248,6 +257,7 @@ public:
     virtual bool equalTo(const Formula & f) const;
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & cts) const;
+    virtual void getFunctions(FunctionSet & vars) const;
 };
 
 /* Klasa koja predstavlja negaciju */
@@ -272,6 +282,7 @@ public:
     virtual bool equalTo(const Formula & f) const;
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & vars) const;
+    virtual void getFunctions(FunctionSet & vars) const;
 };
 
 /* Klasa predstavlja konjunkciju */
@@ -330,6 +341,7 @@ public:
     virtual bool equalTo(const Formula & f) const;
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & cts) const;
+    virtual void getFunctions(FunctionSet & vars) const;
 };
 
 /* Klasa predstavlja univerzalno kvantifikovanu formulu */
