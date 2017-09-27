@@ -13,6 +13,7 @@ class HerbrandUniverse {
     std::set<Term> m_level;
 public:
     HerbrandUniverse(const Signature & sig, const Formula & f);
+    void nextLevel();
     friend ostream & operator << (ostream & out, const HerbrandUniverse & hu);
 };
 
