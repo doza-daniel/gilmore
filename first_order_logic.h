@@ -138,6 +138,13 @@ public:
 class BaseFormula;
 typedef std::shared_ptr<BaseFormula> Formula;
 
+
+// koristimo za dnf
+typedef vector<Formula> LiteralList;
+typedef vector<LiteralList> LiteralListList;
+
+LiteralListList makePairs(const LiteralListList & c1, const LiteralListList & c2);
+
 /* Apstraktna klasa kojom se predstavljaju formule */
 class BaseFormula : public enable_shared_from_this<BaseFormula> {
 public:
@@ -193,6 +200,7 @@ public:
     /* Funkcija za skolemizaciju */
     virtual Formula skolem(Signature & s, vector<Variable> && vars = vector<Variable>());
 
+    virtual LiteralListList listDNF() = 0;
     virtual ~BaseFormula() {}
 };
 
@@ -235,6 +243,7 @@ public:
     virtual void printFormula(ostream & ostr) const;
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja logicku konstantu False */
@@ -244,6 +253,7 @@ public:
     virtual void printFormula(ostream & ostr) const;
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja atom, koji za razliku od iskazne logike ovde ima
@@ -270,6 +280,7 @@ public:
     virtual void getFunctions(FunctionSet & vars) const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+    virtual LiteralListList listDNF();
 };
 
 
@@ -300,6 +311,7 @@ public:
     virtual Formula nnf();
     virtual Formula pullquants();
     virtual Formula prenex();
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja sve binarne veznike */
@@ -330,6 +342,7 @@ public:
     virtual Formula nnf();
     virtual Formula pullquants();
     virtual Formula prenex();
+    virtual LiteralListList listDNF();
  };
 
 
@@ -346,6 +359,7 @@ public:
     virtual Formula nnf();
     virtual Formula pullquants();
     virtual Formula prenex();
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja implikaciju */
@@ -361,6 +375,7 @@ public:
     virtual Formula nnf();
     virtual Formula pullquants();
     virtual Formula prenex();
+    virtual LiteralListList listDNF();
 };
 
 
@@ -377,6 +392,7 @@ public:
     virtual Formula nnf();
     virtual Formula pullquants();
     virtual Formula prenex();
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja kvantifikovane formule */
@@ -394,6 +410,8 @@ public:
     virtual void getVars(VariableSet & vars, bool free) const;
     virtual void getConstants(ConstantSet & cts) const;
     virtual void getFunctions(FunctionSet & vars) const;
+    // ne moze
+    virtual LiteralListList listDNF();
 };
 
 /* Klasa predstavlja univerzalno kvantifikovanu formulu */

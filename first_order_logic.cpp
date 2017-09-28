@@ -1,7 +1,89 @@
 #include "first_order_logic.h"
+#include <algorithm>
 
 
-// Definicije funkcija clanica -----------------------------------------
+
+template <typename T>
+T concatLists(const T & c1, const T & c2)
+{
+    T c = c1;
+
+    std::copy(c2.begin(), c2.end(), back_inserter(c));
+
+    return c;
+}
+
+LiteralListList makePairs(const LiteralListList & c1, const LiteralListList & c2)
+{
+    LiteralListList c;
+
+    for(auto & l1 : c1)
+        for(auto & l2 : c2)
+            c.push_back(concatLists(l1, l2));
+    return c;
+}
+
+// DNF
+
+LiteralListList True::listDNF()
+{
+    return {{}};
+}
+
+LiteralListList False::listDNF()
+{
+    return {};
+}
+
+LiteralListList Atom::listDNF()
+{
+    /* Pozitivan literal (atom) se predstavlja listom koja sadrzi
+    samo jednu listu koja se sastoji iz tog jednog literala */
+    return {{ shared_from_this() }};
+}
+
+LiteralListList Not::listDNF()
+{
+    /* Negativan literal se predstavlja listom koja sadrzi
+    samo jednu listu koja se sastoji iz tog jednog literala */
+    return {{ shared_from_this() }};
+}
+
+LiteralListList And::listDNF()
+{
+    /* DNF lista konjunkcije se dobija tako sto se DNF liste podformula
+    distributivno "pomnoze", tj. liste literala se nadovezu svaka sa
+    svakom */
+    LiteralListList cl1 = _op1->listDNF();
+    LiteralListList cl2 = _op2->listDNF();
+
+    return makePairs(cl1, cl2);
+}
+
+LiteralListList Or::listDNF()
+{
+    /* DNF lista se kod disjunkcije dobija nadovezivanjem DNF listi
+    podformula */
+    LiteralListList cl1 = _op1->listDNF();
+    LiteralListList cl2 = _op2->listDNF();
+
+    return concatLists(cl1, cl2);
+}
+
+LiteralListList Imp::listDNF()
+{
+    throw "DNF not aplicable";
+}
+
+LiteralListList Iff::listDNF()
+{
+    throw "DNF not aplicable";
+}
+
+LiteralListList Quantifier::listDNF()
+{
+    throw "DNF not aplicable";
+}
 
 // Funkcije substitucije -----------------------------------------------
 
