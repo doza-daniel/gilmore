@@ -37,7 +37,9 @@ int main()
 
     std::cout << aNd << std::endl;
 
-    HerbrandUniverse hu(s, aNd);
+    HerbrandUniverse hu(s, a);
+    std::cout << hu << std::endl;
+    hu.nextLevel();
     std::cout << hu << std::endl;
     hu.nextLevel();
     std::cout << hu << std::endl;

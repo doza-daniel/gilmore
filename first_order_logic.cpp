@@ -134,6 +134,7 @@ bool FunctionTerm::equalTo(const Term & t) const
     return true;
 }
 
+
 bool LogicConstant::equalTo( const Formula & f) const
 {
     return f->getType() == this->getType();

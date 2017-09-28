@@ -33,7 +33,14 @@ void HerbrandUniverse::nextLevel()
                     *i,
                     std::vector<Term>(tmp.begin(), tmp.begin() + arity)
             );
-            m_level.insert(t);
+
+            // ugly
+            if (std::find_if(
+                        m_level.begin(),
+                        m_level.end(),
+                        [t](const Term &x){ return x->equalTo(t); }) == m_level.end()) {
+                m_level.insert(t);
+            }
         } while (std::next_permutation(tmp.begin(), tmp.end()));
     }
 }
