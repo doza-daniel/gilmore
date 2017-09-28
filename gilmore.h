@@ -7,7 +7,9 @@
 
 #include "first_order_logic.h"
 
-std::string gilmore(Signature s, const Formula &f);
+void gilmore(Signature s, const Formula &f);
+
+void prove(Signature s, const Formula &f);
 
 
 std::vector< std::vector<Term> > product(std::set<Term> s, int repeat = 2);
