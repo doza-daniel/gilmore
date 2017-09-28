@@ -1,11 +1,19 @@
 #include "gilmore.h"
+#include "herbrand.h"
 
-Gilmore::Gilmore(std::string greet)
-    : m_greet(greet)
-{}
+#include <sstream>
 
-std::ostream & operator << (std::ostream & ostr, const Gilmore & g) 
+std::string gilmore(Signature s, const Formula &f)
 {
-    ostr << "Greeting: " << g.m_greet;
-    return ostr;
+    auto tf = removeUniversalQ(f->nnf()->prenex()->skolem(s));
+
+    HerbrandUniverse universe(s, tf);
+    VariableSet variables;
+    tf->getVars(variables);
+
+
+    std::stringstream ss;
+    ss << tf << std::endl;
+
+    return ss.str();
 }

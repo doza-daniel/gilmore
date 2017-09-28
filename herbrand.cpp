@@ -18,6 +18,11 @@ HerbrandUniverse::HerbrandUniverse(const Signature & sig,const Formula & f)
     }
 }
 
+std::set<Term> HerbrandUniverse::level() const
+{
+    return m_level;
+}
+
 // TODO implementiraj da ako nema dovoljno konstanti u univerzumu da se vestacki
 // doda jos
 void HerbrandUniverse::nextLevel()
