@@ -652,6 +652,7 @@ bool Exists::eval(const Structure & st, const Valuation & val) const
 
 // Klasa Signature -------------------------------------------------------
 
+
 Signature::Signature()
 {
     _currUniq = 0;
