@@ -13,8 +13,13 @@ HerbrandUniverse::HerbrandUniverse(const Signature & sig,const Formula & f)
     m_formula->getConstants(cs);
 
     for (auto i = cs.begin(); i != cs.end(); i++) {
-        Term t = std::make_shared<FunctionTerm>(m_signature, *i, vector<Term>{});
+        Term t = std::make_shared<FunctionTerm>(m_signature, *i, std::vector<Term>{});
         m_level.insert(t);
+    }
+    if (m_level.size() == 0) {
+        m_level.insert(
+            std::make_shared<FunctionTerm>(m_signature, m_signature.getNewUniqueConstant(), std::vector<Term>{})
+        );
     }
 }
 
@@ -23,8 +28,6 @@ std::set<Term> HerbrandUniverse::level() const
     return m_level;
 }
 
-// TODO implementiraj da ako nema dovoljno konstanti u univerzumu da se vestacki
-// doda jos
 void HerbrandUniverse::nextLevel()
 {
     std::vector<Term> tmp;
@@ -35,17 +38,30 @@ void HerbrandUniverse::nextLevel()
         m_signature.checkFunctionSymbol(*i, arity);
 
         do {
-            Term t = std::make_shared<FunctionTerm>(
+            std::vector<Term> operands;
+            if (arity > tmp.size()) {
+                operands = std::vector<Term>(tmp.begin(), tmp.end());
+                for (size_t i = tmp.size(); i < arity; i++) {
+                    operands.push_back(
+                        std::make_shared<FunctionTerm>(
+                            m_signature, m_signature.getNewUniqueConstant(), std::vector<Term>{}
+                        )
+                    );
+                }
+            } else {
+                operands = std::vector<Term>(tmp.begin(), tmp.begin() + arity);
+            }
+            Term application = std::make_shared<FunctionTerm>(
                     m_signature,
                     *i,
-                    std::vector<Term>(tmp.begin(), tmp.begin() + arity)
+                    operands
             );
 
             if (std::find_if(
                         m_level.begin(),
                         m_level.end(),
-                        [t](const Term &x){ return x->equalTo(t); }) == m_level.end()) {
-                m_level.insert(t);
+                        [application](const Term &x){ return x->equalTo(application); }) == m_level.end()) {
+                m_level.insert(application);
             }
         } while (std::next_permutation(tmp.begin(), tmp.end()));
     }
