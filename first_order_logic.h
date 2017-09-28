@@ -23,7 +23,13 @@ class Signature {
 private:
     map<FunctionSymbol,  unsigned> _functions;
     map<PredicateSymbol, unsigned> _predicates;
+    vector<FunctionSymbol> _uniqueConstants;
+    static size_t _currUniq;
 public:
+    Signature();
+
+    FunctionSymbol getNewUniqueConstant();
+
     /* Dodavanje funkcijskog simbola date arnosti */
     void addFunctionSymbol(const FunctionSymbol & f, unsigned arity);
 

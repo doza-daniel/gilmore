@@ -652,6 +652,22 @@ bool Exists::eval(const Structure & st, const Valuation & val) const
 
 // Klasa Signature -------------------------------------------------------
 
+Signature::Signature()
+{
+    _currUniq = 0;
+    for (size_t i = 0; i < 100; ++i) {
+        std::stringstream ss;
+        ss << "uc" << i;
+        _uniqueConstants.push_back(ss.str());
+        addFunctionSymbol(ss.str(), 0);
+    }
+}
+
+FunctionSymbol Signature::getNewUniqueConstant()
+{
+    return _uniqueConstants[_currUniq++];
+}
+
 void Signature::addFunctionSymbol(const FunctionSymbol & f, unsigned arity)
 {
     _functions.insert(make_pair(f, arity));
