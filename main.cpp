@@ -10,34 +10,30 @@ int main()
     Signature s;
 
     // constants
-    s.addFunctionSymbol("c1", 0);
-    s.addFunctionSymbol("c2", 0);
+    s.addFunctionSymbol("c", 0);
 
     // functions
-    s.addFunctionSymbol("f", 2);
-    s.addFunctionSymbol("g", 1);
+    s.addFunctionSymbol("f", 1);
     s.addFunctionSymbol("g", 1);
 
     // predicates
-    s.addPredicateSymbol("p1", 2);
-    s.addPredicateSymbol("==", 2);
+    s.addPredicateSymbol("p", 2);
+    s.addPredicateSymbol("q", 1);
 
-    Term c1 = std::make_shared<FunctionTerm>(s, "c1");
-    Term c2 = std::make_shared<FunctionTerm>(s, "c2");
-    Term f = std::make_shared<FunctionTerm>(s, "f", std::vector<Term>{c1, c2});
-    Term x = std::make_shared<VariableTerm>("x");
+    Term c = std::make_shared<FunctionTerm>(s, "c", std::vector<Term>{});
 
-    Formula a = std::make_shared<Atom>(s, "p1", std::vector<Term>{f, x});
+    Term f = std::make_shared<FunctionTerm>(s, "f", std::vector<Term>{c});
+    Term g = std::make_shared<FunctionTerm>(s, "g", std::vector<Term>{c});
 
-    Term g1 = std::make_shared<FunctionTerm>(s, "g", std::vector<Term>{c1});
-    Term g2 = std::make_shared<FunctionTerm>(s, "g", std::vector<Term>{c2});
-    Formula eq = std::make_shared<Atom>(s, "==", std::vector<Term>{g1, g2});
+    Formula p = std::make_shared<Atom>(s, "p", std::vector<Term>{f, c});
+    Formula q = std::make_shared<Atom>(s, "q", std::vector<Term>{g});
 
-    Formula aNd = std::make_shared<And>(a, eq);
+    Formula i = std::make_shared<And>(p, q);
 
-    std::cout << aNd << std::endl;
+    std::cout << "FORMULA:" << std::endl;
+    std::cout << i << std::endl;
 
-    HerbrandUniverse hu(s, a);
+    HerbrandUniverse hu(s, i);
     std::cout << hu << std::endl;
     hu.nextLevel();
     std::cout << hu << std::endl;

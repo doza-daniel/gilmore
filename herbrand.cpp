@@ -18,14 +18,16 @@ HerbrandUniverse::HerbrandUniverse(const Signature & sig,const Formula & f)
     }
 }
 
+// TODO implementiraj da ako nema dovoljno konstanti u univerzumu da se vestacki
+// doda jos
 void HerbrandUniverse::nextLevel()
 {
+    std::vector<Term> tmp;
+    std::copy(m_level.begin(), m_level.end(), std::back_inserter(tmp));
+
     for (auto i = m_functions.begin(); i != m_functions.end(); i++) {
         unsigned arity;
         m_signature.checkFunctionSymbol(*i, arity);
-
-        std::vector<Term> tmp;
-        std::copy(m_level.begin(), m_level.end(), std::back_inserter(tmp));
 
         do {
             Term t = std::make_shared<FunctionTerm>(
@@ -34,7 +36,6 @@ void HerbrandUniverse::nextLevel()
                     std::vector<Term>(tmp.begin(), tmp.begin() + arity)
             );
 
-            // ugly
             if (std::find_if(
                         m_level.begin(),
                         m_level.end(),
@@ -47,18 +48,22 @@ void HerbrandUniverse::nextLevel()
 
 ostream & operator << (ostream & out, const HerbrandUniverse & hu) {
     out << "Functions:" << endl;
+    out << "{ ";
     std::copy(
             hu.m_functions.begin(),
             hu.m_functions.end(),
             std::ostream_iterator<FunctionSymbol>(std::cout, ", ")
     );
+    out << " }";
 
     out << endl << "Level:" << endl;
+    out << "{ ";
     std::copy(
             hu.m_level.begin(),
             hu.m_level.end(),
             std::ostream_iterator<Term>(std::cout, ", ")
     );
+    out << " }";
     return out;
 }
 
