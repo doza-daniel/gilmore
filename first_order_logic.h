@@ -177,18 +177,42 @@ public:
     /* Zamena slobodnih pojavljivanja varijable v termom t */
     virtual Formula substitute(const Variable & v, const Term & t) = 0;
 
+    /* Funkcija simplifikuje formulu (uklanja konstante i nepotrebne 
+    kvantifikatore) */
+    virtual Formula simplify() = 0;
+
+    /* Funkcija svodi formulu na NNF */
+    virtual Formula nnf() = 0;
+
+    /* Pomocna funkcija za izdvajanje kvantifikatora */
+    virtual Formula pullquants() = 0;
+
+    /* Funkcija svodi formulu na PRENEX */
+    virtual Formula prenex() = 0;
+
+    /* Funkcija za skolemizaciju */
+    virtual Formula skolem(Signature & s, vector<Variable> && vars = vector<Variable>());
+
     virtual ~BaseFormula() {}
 };
 
 ostream & operator << (ostream & ostr, const Formula & f);
 
-/* Funkcija vraca novu varijablu koja se ne pojavljuje ni u f ni u t */
-Variable getUniqueVariable(const Formula & f, const Term & t);
+/* Funkcija vraca novu varijablu koja se ne pojavljuje ni u e1 ni u e2 */
+template <typename T1, typename T2>
+Variable getUniqueVariable(const T1 & e1, const T2 & e2);
+
+/* Funkcija vraca novi funkcijski simbol koji se ne pojavljuje u formuli */
+FunctionSymbol getUniqueFunctionSymbol(const Signature & s);
 
 /* Klasa predstavlja sve atomicke formule (True, False i Atom) */
 class AtomicFormula : public BaseFormula {
 public:
     virtual unsigned complexity() const;
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
 };
 
 /* Klasa predstavlja logicke konstante (True i False) */
@@ -268,6 +292,11 @@ public:
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
 };
 
 /* Klasa predstavlja sve binarne veznike */
@@ -293,6 +322,11 @@ public:
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
  };
 
 
@@ -304,6 +338,11 @@ public:
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
 };
 
 /* Klasa predstavlja implikaciju */
@@ -314,6 +353,11 @@ public:
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
 };
 
 
@@ -325,6 +369,11 @@ public:
     virtual Type getType() const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
 };
 
 /* Klasa predstavlja kvantifikovane formule */
@@ -352,6 +401,12 @@ public:
     virtual void printFormula(ostream & ostr) const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
+    virtual Formula skolem(Signature & s, vector<Variable> && vars);
 };
 
 
@@ -363,6 +418,12 @@ public:
     virtual void printFormula(ostream & ostr) const;
     virtual bool eval(const Structure & st, const Valuation & val) const;
     virtual Formula substitute(const Variable & v, const Term & t);
+
+    virtual Formula simplify();
+    virtual Formula nnf();
+    virtual Formula pullquants();
+    virtual Formula prenex();
+    virtual Formula skolem(Signature & s, vector<Variable> && vars);
 };
 
 /* Tip podataka kojim se predstavlja domen. U opstem slucaju, domen u logici
