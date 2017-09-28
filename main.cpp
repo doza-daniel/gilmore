@@ -30,13 +30,12 @@ int main()
 
     Formula i = std::make_shared<And>(p, q);
 
-    std::cout << "FORMULA:" << std::endl;
-    std::cout << i << std::endl;
-
     HerbrandUniverse hu(s, i);
     std::cout << hu << std::endl;
     hu.nextLevel();
     std::cout << hu << std::endl;
     hu.nextLevel();
     std::cout << hu << std::endl;
+
+    return 0;
 }
