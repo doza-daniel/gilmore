@@ -652,11 +652,11 @@ bool Exists::eval(const Structure & st, const Valuation & val) const
 
 // Klasa Signature -------------------------------------------------------
 
+size_t Signature::_currUniq = 0;
 
 Signature::Signature()
 {
-    _currUniq = 0;
-    for (size_t i = 0; i < 100; ++i) {
+    for (size_t i = 0; i < MAX_UNIQUE_CTS; ++i) {
         std::stringstream ss;
         ss << "uc" << i;
         _uniqueConstants.push_back(ss.str());
@@ -664,9 +664,12 @@ Signature::Signature()
     }
 }
 
-FunctionSymbol Signature::getNewUniqueConstant()
+FunctionSymbol Signature::getNewUniqueConstant() const
 {
-    return _uniqueConstants[_currUniq++];
+    if (Signature::_currUniq == MAX_UNIQUE_CTS)
+        throw "Max unique constants reached";
+
+    return _uniqueConstants[Signature::_currUniq++];
 }
 
 void Signature::addFunctionSymbol(const FunctionSymbol & f, unsigned arity)

@@ -24,11 +24,12 @@ private:
     map<FunctionSymbol,  unsigned> _functions;
     map<PredicateSymbol, unsigned> _predicates;
     vector<FunctionSymbol> _uniqueConstants;
-    size_t _currUniq;
+    static size_t _currUniq;
 public:
     Signature();
 
-    FunctionSymbol getNewUniqueConstant();
+    const size_t MAX_UNIQUE_CTS = 100;
+    FunctionSymbol getNewUniqueConstant() const;
 
     /* Dodavanje funkcijskog simbola date arnosti */
     void addFunctionSymbol(const FunctionSymbol & f, unsigned arity);
