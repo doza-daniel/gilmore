@@ -820,29 +820,41 @@ bool BaseFormula::containsVariable(const Variable & v, bool free) const
 template <typename T1, typename T2>
 Variable getUniqueVariable(const T1 & e1, const T2 & e2)
 {
-  static unsigned i = 0;
-  
-  Variable v;
-  
-  do {    
-    v = string("uv") + to_string(++i);
-  } while(e1->containsVariable(v) || e2->containsVariable(v));
-  
-  return v;
+    static unsigned i = 0;
+
+    Variable v;
+
+    do {
+        v = string("uv") + to_string(++i);
+    } while(e1->containsVariable(v) || e2->containsVariable(v));
+
+    return v;
 }
+
+Formula removeUniversalQ(const Formula & f) {
+    Forall * fa = NULL;
+    if (f->getType() == BaseFormula::T_FORALL) {
+        fa = (Forall*)f.get();
+        return removeUniversalQ(fa->getOperand());
+    } else {
+        return f;
+    }
+}
+
+
 
 FunctionSymbol getUniqueFunctionSymbol(const Signature & s)
 {
-  static unsigned i = 0;
-  unsigned arity;
+    static unsigned i = 0;
+    unsigned arity;
 
-  FunctionSymbol f;
-  
-  do {
-    f = string("uf") + to_string(++i);
-  } while(s.checkFunctionSymbol(f, arity));
-  
-  return f;
+    FunctionSymbol f;
+
+    do {
+        f = string("uf") + to_string(++i);
+    } while(s.checkFunctionSymbol(f, arity));
+
+    return f;
 }
 
 // ----------------------------------------------------------------------

@@ -202,6 +202,9 @@ ostream & operator << (ostream & ostr, const Formula & f);
 template <typename T1, typename T2>
 Variable getUniqueVariable(const T1 & e1, const T2 & e2);
 
+/* Funkcija uklanja univerzalne kvantifikatore sa pocetka izraza */
+Formula removeUniversalQ(const Formula & f);
+
 /* Funkcija vraca novi funkcijski simbol koji se ne pojavljuje u formuli */
 FunctionSymbol getUniqueFunctionSymbol(const Signature & s);
 
