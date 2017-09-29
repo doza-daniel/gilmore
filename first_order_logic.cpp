@@ -199,13 +199,18 @@ bool FunctionTerm::equalTo(const Term & t) const
     if(t->getType() != TT_FUNCTION)
         return false;
 
-    if(_f != ((FunctionTerm *) t.get())->getSymbol())
-        return false;
-
     const vector<Term> & t_ops = ((FunctionTerm *) t.get())->getOperands();
 
     if(_ops.size() != t_ops.size())
         return false;
+
+    if (_ops.size() == 0) {
+        return true;
+    }
+
+    if(_f != ((FunctionTerm *) t.get())->getSymbol())
+        return false;
+
 
     for(unsigned i = 0; i < _ops.size(); i++) {
         if(!_ops[i]->equalTo(t_ops[i])) {
@@ -1135,7 +1140,7 @@ BaseFormula::Type Exists::getType() const
 
 // Funkcije za simplifikaciju -------------------------------------------
 
-/* Simplifikacija atomicke formule je trivijalna */
+/* implifikacija atomicke formule je trivijalna */
 Formula AtomicFormula::simplify()
 {
     return shared_from_this();
@@ -1156,7 +1161,7 @@ Formula Not::simplify()
 
 Formula And::simplify()
 {
-    /* Simplifikacija konjukcije po pravilima A /\ True === A, 
+    /* Simplifikacija konjukcije po pravilima A /\ True === A,
     A /\ False === False i sl. */
     Formula simp_op1 = _op1->simplify();
     Formula simp_op2 = _op2->simplify();

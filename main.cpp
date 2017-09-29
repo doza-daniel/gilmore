@@ -8,34 +8,61 @@
 int main()
 {
     Signature s;
+    //  H = (Ax)(Ay)(p(x,y)=>p(y,x))
+    //  K = (Ax)(Ay)(Az)((p(x,y)/\p(y,z)) => p(x,z))
+    //  L = (Ax)((Ey)p(x,y) => p(x,x))
+    //
+    //  Dokazati: (H /\ K) => L
 
-    // constants
-    s.addFunctionSymbol("c", 0);
-
-    // functions
-    s.addFunctionSymbol("f", 1);
-    s.addFunctionSymbol("g", 1);
-
-    // predicates
     s.addPredicateSymbol("p", 2);
-    s.addPredicateSymbol("q", 1);
+    Term x = std::make_shared<VariableTerm>("x");
+    Term y = std::make_shared<VariableTerm>("y");
+    Term z = std::make_shared<VariableTerm>("z");
 
-    Term c = std::make_shared<FunctionTerm>(s, "c", std::vector<Term>{});
+    Formula H = std::make_shared<Forall>(
+        "x",
+        std::make_shared<Forall>(
+            "y",
+            std::make_shared<Imp>(
+                std::make_shared<Atom>(s, "p", std::vector<Term>{x, y}),
+                std::make_shared<Atom>(s, "p", std::vector<Term>{y, x})
+            )
+        )
+    );
 
-    Term f = std::make_shared<FunctionTerm>(s, "f", std::vector<Term>{c});
-    Term g = std::make_shared<FunctionTerm>(s, "g", std::vector<Term>{c});
+    Formula K = std::make_shared<Forall>(
+        "x",
+        std::make_shared<Forall>(
+            "y",
+            std::make_shared<Forall>(
+                "z",
+                std::make_shared<Imp>(
+                    std::make_shared<And>(
+                        std::make_shared<Atom>(s, "p", std::vector<Term>{x, y}),
+                        std::make_shared<Atom>(s, "p", std::vector<Term>{y, z})
+                    ),
+                    std::make_shared<Atom>(s, "p", std::vector<Term>{x, z})
+                )
+            )
+        )
+    );
 
-    Formula p = std::make_shared<Atom>(s, "p", std::vector<Term>{f, c});
-    Formula q = std::make_shared<Atom>(s, "q", std::vector<Term>{g});
+    Formula L = std::make_shared<Forall>(
+        "x",
+        std::make_shared<Forall>(
+            "y",
+            std::make_shared<Imp>(
+                std::make_shared<Atom>(s, "p", std::vector<Term>{x, y}),
+                std::make_shared<Atom>(s, "p", std::vector<Term>{x, x})
+            )
+        )
+    );
 
-    Formula i = std::make_shared<And>(p, q);
+    Formula f = std::make_shared<Imp>(std::make_shared<And>(H, K), L);
 
-    HerbrandUniverse hu(s, i);
-    std::cout << hu << std::endl;
-    hu.nextLevel();
-    std::cout << hu << std::endl;
-    hu.nextLevel();
-    std::cout << hu << std::endl;
+    std::cout << f << std::endl;
+
+    prove(s, f);
 
     return 0;
 }

@@ -47,30 +47,30 @@ void gilmore(Signature s, const Formula &f)
 
         size_t removeCount = 0;
 
-        for (LiteralList clause : dnf) {
-            LiteralList foundPositive;
-            LiteralList foundNegative;
+        for (LiteralList conjuncts : dnf) {
+            LiteralList positive;
+            LiteralList negative;
             bool found = false;
 
-            for (auto literal : clause) {
+            for (auto literal : conjuncts) {
                 if (literal->getType() == BaseFormula::T_NOT) {
                     Formula t = ((Not*)literal.get())->getOperand();
-                    if (std::find_if(foundPositive.begin(), foundPositive.end(),
-                                [t](const Formula &x) { return x->equalTo(t); }) != foundPositive.end()) {
+                    if (std::find_if(positive.begin(), positive.end(),
+                                [t](const Formula &x) { return x->equalTo(t); }) != positive.end()) {
                         found = true;
                         removeCount += 1;
                         break;
                     } else {
-                        foundNegative.push_back(t);
+                        negative.push_back(t);
                     }
                 } else if (literal->getType() == BaseFormula::T_ATOM) {
-                    if (std::find_if(foundNegative.begin(), foundNegative.end(),
-                                [literal](const Formula &x) { return x->equalTo(literal); }) != foundNegative.end()) {
+                    if (std::find_if(negative.begin(), negative.end(),
+                                [literal](const Formula &x) { return x->equalTo(literal); }) != negative.end()) {
                         found = true;
                         removeCount += 1;
                         break;
                     } else {
-                        foundPositive.push_back(literal);
+                        positive.push_back(literal);
                     }
                 } else {
                     throw "Bad type";
@@ -78,8 +78,8 @@ void gilmore(Signature s, const Formula &f)
             }
 
             if (!found) {
-                std::cout << "NOT ELIMINATED: [";
-                for (auto literal : clause) {
+                std::cout << "Conjunctions not removed: [";
+                for (auto literal : conjuncts) {
                     std::cout << literal << ", ";
                 }
                 std::cout << "]" << std::endl;
@@ -94,10 +94,6 @@ void gilmore(Signature s, const Formula &f)
         }
 
         universe.nextLevel();
-    }
-
-    if (iteration == MAX_ITERATIONS - 1) {
-        std::cout << "Proof not found!" << std::endl;
     }
 }
 

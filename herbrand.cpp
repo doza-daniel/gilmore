@@ -17,6 +17,7 @@ HerbrandUniverse::HerbrandUniverse(const Signature & sig,const Formula & f)
         m_level.insert(t);
     }
     if (m_level.size() == 0) {
+        std::cout << "No constants found, inserting unique..." << std::endl;
         m_level.insert(
             std::make_shared<FunctionTerm>(m_signature, m_signature.getNewUniqueConstant(), std::vector<Term>{})
         );
